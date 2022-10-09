@@ -7,11 +7,14 @@ var rsltCurDetailEl = document.querySelector('#rslt_cur_detail');
 var forecastBoxEl = document.querySelector('#forecast-box');
 var timeSelectEl = document.querySelector('#time-select');
 var cityListUl = document.querySelector('#city-list');
+var schHistoryUl = document.querySelector('#sch-history');
 
+// the variables to search for
 var cityName;
 var geoCode;
 
 var weatherApiKey = '0f82ed7b5ab49854cbcad819084922f8';
+var localStorageKey = 'weatherSchHistory';
 
 var formSubmitHandler = function(event){
     event.preventDefault();
@@ -38,13 +41,7 @@ var formSubmitHandler = function(event){
                     cityLi.addEventListener('click', getWeatherInfo)
                     
                     cityListUl.append(cityLi);
-                    // if (i===0) {
-                    //     geoCode = {
-                    //         lat: data[i].lat, lon: data[i].lon
-                    //     }; 
-                    //     console.log('here') 
-                    //     console.log(geoCode);
-                    // }
+
                 } 
 
 
@@ -75,6 +72,26 @@ function removeAllChildNodes(parent) {
     }
 }
 
+var saveDataToStorage = function(){
+    var oldRecordStr = localStorage.getItem(localStorageKey)
+    var schArr = [];
+    if (oldRecordStr) {
+        schArr = JSON.parse(oldRecordStr) ;
+    }
+   
+    var oneSchSet = {
+        city: cityName,
+        lat: geoCode['lat'],
+        lon: geoCode['lon']
+    }
+    schArr.push(oneSchSet);
+    var newRecordStr = JSON.stringify(schArr);
+
+    console.log("save Data to storage");
+    console.log(newRecordStr);
+    
+    localStorage.setItem(localStorageKey,newRecordStr );
+}
 var getWeatherInfo = function(event) {
     console.log("GET weather INFO : " + cityName);
     console.log(event.target)
@@ -83,6 +100,9 @@ var getWeatherInfo = function(event) {
         lat : event.target.getAttribute('data-lat'),
         lon : event.target.getAttribute('data-lon')
     }
+
+    removeAllChildNodes(cityListUl);
+    saveDataToStorage();
 
 // current weather
     var apiURL = "https://api.openweathermap.org/data/2.5/weather?lat="+geoCode['lat']+"&lon="+geoCode['lon']+"&units=imperial&appid="+weatherApiKey;
@@ -214,23 +234,28 @@ var displayForecast = function(wData){
 
 schFormEl.addEventListener('submit', formSubmitHandler);
 
-// timeSelectEl.addEventListener('change', function(event){
-//     console.log(event.target.value);
 
-//     var hourSelected = event.target.value;
-//         // forecast
-//         var apiURL = "https://api.openweathermap.org/data/2.5/forecast?lat=44.34&lon=10.99&units=imperial&appid="+weatherApiKey;
+// display search history
+var historyStr = localStorage.getItem(localStorageKey) ;
+// cleardata
+removeAllChildNodes(schHistoryUl);
+if (historyStr) {
+    var historyArr = JSON.parse(historyStr) ;
 
-//         fetch(apiURL).then(function(response){
-//             if (response.ok) {
-//                 response.json().then(function (data) {
-//                     displayForecast(data, hourSelected);
+    for (let i = 0; i < historyArr.length; i++) {
+        var oldCity = historyArr[i].city;
+        var oldLat = historyArr[i].lat;
+        var oldLon = historyArr[i].lon;
+
+     
+        var oldLiEl = document.createElement('li');
+        oldLiEl.setAttribute('data-lat', oldLat);
+        oldLiEl.setAttribute('data-lon', oldLon);
+        oldLiEl.textContent = oldCity;
+        oldLiEl.addEventListener('click', getWeatherInfo);
+        schHistoryUl.append(oldLiEl);
+
+    }
+
+}
     
-//                 });
-//             }
-//         }).catch( function(error) {
-//             alert('Unable to connect to OpenWeatherMap.org')
-//         });
-
-// })
-
