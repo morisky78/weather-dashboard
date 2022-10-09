@@ -36,8 +36,10 @@ var formSubmitHandler = function(event){
                     var cityLi = document.createElement('li')
                     cityLi.textContent = cityDetail;
                     
+                    cityLi.setAttribute('data-name', data[i].name);
                     cityLi.setAttribute('data-lat', data[i].lat);
                     cityLi.setAttribute('data-lon', data[i].lon);
+                    
                     cityLi.addEventListener('click', getWeatherInfo)
                     
                     cityListUl.append(cityLi);
@@ -53,16 +55,6 @@ var formSubmitHandler = function(event){
     })
 
 
-    // if( cityName ){ 
-    //     if ( getWeatherInfo() ) {
-    //         // TODO: store the city name to the local storage
-    //     } else {
-    //         // TODO: couldn't get the weather info.
-    //         // show the error message
-    //     }
-    // } else {
-    //     // alert please enter city name
-    // }
 }
 
 
@@ -84,6 +76,7 @@ var saveDataToStorage = function(){
         lat: geoCode['lat'],
         lon: geoCode['lon']
     }
+
     schArr.push(oneSchSet);
     var newRecordStr = JSON.stringify(schArr);
 
@@ -92,9 +85,11 @@ var saveDataToStorage = function(){
     
     localStorage.setItem(localStorageKey,newRecordStr );
 }
+
 var getWeatherInfo = function(event) {
+
+    cityName = event.target.getAttribute('data-name');
     console.log("GET weather INFO : " + cityName);
-    console.log(event.target)
 
     geoCode = {
         lat : event.target.getAttribute('data-lat'),
@@ -104,7 +99,7 @@ var getWeatherInfo = function(event) {
     removeAllChildNodes(cityListUl);
     saveDataToStorage();
 
-// current weather
+    // current weather
     var apiURL = "https://api.openweathermap.org/data/2.5/weather?lat="+geoCode['lat']+"&lon="+geoCode['lon']+"&units=imperial&appid="+weatherApiKey;
 
   
@@ -119,19 +114,6 @@ var getWeatherInfo = function(event) {
         alert('Unable to connect to OpenWeatherMap.org')
     });
 
-    // forecast
-    // var apiURL = "https://api.openweathermap.org/data/2.5/forecast?lat=44.34&lon=10.99&units=imperial&appid="+weatherApiKey;
-
-    // fetch(apiURL).then(function(response){
-    //     if (response.ok) {
-    //         response.json().then(function (data) {
-    //             displayForecast(data, timeSelectEl.value);
-
-    //         });
-    //     }
-    // }).catch( function(error) {
-    //     alert('Unable to connect to OpenWeatherMap.org')
-    // });
 
 }
 
@@ -139,6 +121,7 @@ var displayResult = function(wData) {
 
     console.log("Display Current Weather: "+cityName);
     console.log(wData);
+
 
 
     if ( wData.length === 0){
@@ -181,6 +164,9 @@ var displayResult = function(wData) {
     }).catch( function(error) {
         alert('Unable to connect to OpenWeatherMap.org')
     });
+
+    schInputEl.value='';
+    displaySearchHistory();
 
 }
 
@@ -231,31 +217,37 @@ var displayForecast = function(wData){
 
 }
 
+var displaySearchHistory = function(){
+    // display search history
+    var historyStr = localStorage.getItem(localStorageKey) ;
+    // cleardata
+    removeAllChildNodes(schHistoryUl);
+    if (historyStr) {
+        var historyArr = JSON.parse(historyStr) ;
 
-schFormEl.addEventListener('submit', formSubmitHandler);
+        for (let i = 0; i < historyArr.length; i++) {
+            var oldCity = historyArr[i].city;
+            var oldLat = historyArr[i].lat;
+            var oldLon = historyArr[i].lon;
 
+        
+            var oldLiEl = document.createElement('li');
+            oldLiEl.setAttribute('data-name', oldCity);
+            oldLiEl.setAttribute('data-lat', oldLat);
+            oldLiEl.setAttribute('data-lon', oldLon);
+            oldLiEl.textContent = oldCity;
+            oldLiEl.addEventListener('click', getWeatherInfo);
+            schHistoryUl.append(oldLiEl);
 
-// display search history
-var historyStr = localStorage.getItem(localStorageKey) ;
-// cleardata
-removeAllChildNodes(schHistoryUl);
-if (historyStr) {
-    var historyArr = JSON.parse(historyStr) ;
-
-    for (let i = 0; i < historyArr.length; i++) {
-        var oldCity = historyArr[i].city;
-        var oldLat = historyArr[i].lat;
-        var oldLon = historyArr[i].lon;
-
-     
-        var oldLiEl = document.createElement('li');
-        oldLiEl.setAttribute('data-lat', oldLat);
-        oldLiEl.setAttribute('data-lon', oldLon);
-        oldLiEl.textContent = oldCity;
-        oldLiEl.addEventListener('click', getWeatherInfo);
-        schHistoryUl.append(oldLiEl);
+        }
 
     }
-
 }
+
+
+
+schFormEl.addEventListener('submit', formSubmitHandler);
+displaySearchHistory();
+
+
     
