@@ -1,0 +1,12 @@
+
+
+.search-city{background-color: pink;}
+.search-result{background-color:gainsboro;}
+header, footer{background-color:cadetblue;}
+
+#current-box{border:1px solid black;padding:10px;}
+
+#forecast-box section{background:rosybrown;}
+
+#city-list li{background-color: beige;}
+#city-list li:hover{background-color:aqua;cursor: pointer;}
