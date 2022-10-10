@@ -9,7 +9,7 @@ var timeSelectEl = document.querySelector('#time-select');
 var cityListUl = document.querySelector('#city-list');
 var schHistoryUl = document.querySelector('#sch-history');
 
-// the variables to search for
+// The variables to search for
 var cityName;
 var geoCode;
 
@@ -70,11 +70,20 @@ var saveDataToStorage = function(){
     if (oldRecordStr) {
         schArr = JSON.parse(oldRecordStr) ;
     }
-   
+    
     var oneSchSet = {
         city: cityName,
         lat: geoCode['lat'],
         lon: geoCode['lon']
+    }
+    
+    // if the new set is already in the history, do not save the data in the local sotrage
+    for (let i = 0; i < schArr.length; i++) {
+        var obj = schArr[i];
+        if ( obj.city == oneSchSet.city && obj.lat == oneSchSet.lat && obj.lon == oneSchSet.lon ) {
+            console.log("Already in history storage");
+            return;
+        }
     }
 
     schArr.push(oneSchSet);
@@ -97,6 +106,7 @@ var getWeatherInfo = function(event) {
     }
 
     removeAllChildNodes(cityListUl);
+
     saveDataToStorage();
 
     // current weather
@@ -123,12 +133,10 @@ var displayResult = function(wData) {
     console.log(wData);
 
 
-
     if ( wData.length === 0){
         currentBoxEl.textContent = 'No current weather found';
         return;
     }
-
     
     rsltCityEl.textContent = wData.name;
     rsltCurDateEl.textContent = moment(moment.unix(wData.dt)).format('M/D/YYYY');
@@ -183,10 +191,10 @@ var displayForecast = function(wData){
         var thisHour = moment(dataList[i].dt_txt, "YYYY-MM-DD HH:mm:ss").format('H');
 
         if ( thisHour == 15) {
-            console.log(dataList[i].dt_txt + '----'+ thisHour);
-            console.log(dataList[i].main.temp);
-            console.log(dataList[i].wind.speed);
-            console.log(dataList[i].main.humidity);
+            // console.log(dataList[i].dt_txt + '----'+ thisHour);
+            // console.log(dataList[i].main.temp);
+            // console.log(dataList[i].wind.speed);
+            // console.log(dataList[i].main.humidity);
 
             var oneBox = document.createElement('section');
             var dateH4 = document.createElement('h4');
@@ -236,6 +244,7 @@ var displaySearchHistory = function(){
             oldLiEl.setAttribute('data-lat', oldLat);
             oldLiEl.setAttribute('data-lon', oldLon);
             oldLiEl.textContent = oldCity;
+
             oldLiEl.addEventListener('click', getWeatherInfo);
             schHistoryUl.append(oldLiEl);
 
