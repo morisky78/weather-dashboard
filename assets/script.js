@@ -1,9 +1,10 @@
 var schFormEl = document.querySelector('#sch-form');
 var schInputEl = document.querySelector('#sch-city');
 var currentBoxEl = document.querySelector('#current-box');
-var rsltCityEl = document.querySelector('#rslt_city');
-var rsltCurDateEl = document.querySelector('#rslt_curdate');
-var rsltCurDetailEl = document.querySelector('#rslt_cur_detail');
+var rsltCityEl = document.querySelector('#rslt-city');
+var rsltIconEl = document.querySelector('#rslt-icon');
+var rsltCurDateEl = document.querySelector('#rslt-curdate');
+var rsltCurDetailEl = document.querySelector('#rslt-cur-detail');
 var forecastBoxEl = document.querySelector('#forecast-box');
 var timeSelectEl = document.querySelector('#time-select');
 var cityListUl = document.querySelector('#city-list');
@@ -133,15 +134,23 @@ var displayResult = function(wData) {
     console.log(wData);
 
 
-    if ( wData.length === 0){
-        currentBoxEl.textContent = 'No current weather found';
-        return;
-    }
+    // if ( wData.length === 0){
+    //     currentBoxEl.textContent = 'No current weather found';
+    //     return;
+    // }
     
+    
+    removeAllChildNodes(rsltIconEl);
+    removeAllChildNodes(rsltCurDetailEl);
+
     rsltCityEl.textContent = wData.name;
     rsltCurDateEl.textContent = moment(moment.unix(wData.dt)).format('M/D/YYYY');
 
-    removeAllChildNodes(rsltCurDetailEl);
+    var iconImg = document.createElement('img');
+    iconImg.setAttribute('src', "http://openweathermap.org/img/wn/"+wData.weather[0].icon+"@2x.png")
+    rsltIconEl.append(iconImg);
+
+    
 
     // rsltCurDetailEl.textContent = printWeatherDetail(wData);
     var detailUl = document.createElement('ul');
@@ -186,15 +195,18 @@ var displayForecast = function(wData){
     removeAllChildNodes(forecastBoxEl);
 
     var dataList = wData.list;
+
+
     for (let i = 0; i < dataList.length; i++) {   
 
-        var thisHour = moment(dataList[i].dt_txt, "YYYY-MM-DD HH:mm:ss").format('H');
+        // var thisHour = moment(dataList[i].dt_txt, "YYYY-MM-DD HH:mm:ss").format('H');
+        var thisHour = moment(moment.unix(dataList[i].dt)).format('H');
+        console.log(thisHour );
 
-        if ( thisHour == 15) {
-            // console.log(dataList[i].dt_txt + '----'+ thisHour);
-            // console.log(dataList[i].main.temp);
-            // console.log(dataList[i].wind.speed);
-            // console.log(dataList[i].main.humidity);
+        if ( thisHour == 14) {
+            console.log(dataList[i].dt_txt + '----'+ thisHour);
+
+            console.log(moment(moment.unix(dataList[i].dt)).format('YYYY-MM-DD HH:mm:ss'));
 
             var oneBox = document.createElement('section');
             var dateH4 = document.createElement('h4');
@@ -217,7 +229,6 @@ var displayForecast = function(wData){
             oneBox.append(iconIdSpan);
             oneBox.append(detailUl);
             forecastBoxEl.append(oneBox);
-
 
         }
         
