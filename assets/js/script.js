@@ -9,6 +9,7 @@ var forecastBoxEl = document.querySelector('#forecast-box');
 var timeSelectEl = document.querySelector('#time-select');
 var cityListUl = document.querySelector('#city-list');
 var schHistoryUl = document.querySelector('#sch-history');
+var errMsgEl = document.querySelector('#error-msg');
 
 // The variables to search for
 var cityName;
@@ -21,6 +22,13 @@ var formSubmitHandler = function(event){
     event.preventDefault();
 
     cityName = schInputEl.value.trim();
+
+    if ( !cityName ) {
+        errMsgEl.textContent = 'Please enter a city.';
+        currentBoxEl.setAttribute('style','display:none');
+        forecastBoxEl.parentElement.setAttribute('style','display:none');
+        return;
+    }
 
     // TODO: get Geocoding API
     var apiURL = "http://api.openweathermap.org/geo/1.0/direct?q="+cityName+"&limit=5&appid="+weatherApiKey;
@@ -37,8 +45,15 @@ var formSubmitHandler = function(event){
                 
                 removeAllChildNodes(cityListUl);
 
-                // when there is only one result from the city search, show the info right away
-                if (data.length === 1 ) {
+                 
+                if ( data.length === 0 ){
+                    errMsgEl.textContent = "Couldn't find the city. Please try again";
+                    currentBoxEl.setAttribute('style','display:none');
+                    forecastBoxEl.parentElement.setAttribute('style','display:none');
+                    return;
+                    
+                } else if (data.length === 1 ) {
+                    // when there is only 1 result from the city search, show the info right away
                     cityName = data[0].name;                       
                     geoCode = {
                         lat : data[0].lat,
@@ -129,6 +144,7 @@ var getWeatherInfo = function() {
 
     console.log("GET weather INFO : " + cityName);
 
+    errMsgEl.textContent = '';
     removeAllChildNodes(cityListUl);
     saveDataToStorage();
 
