@@ -1,12 +1,35 @@
 
-
+p{margin:0;}
 .search-city{background-color: pink;}
 .search-result{background-color:gainsboro;}
-header, footer{background-color:cadetblue;}
 
-#current-box{border:1px solid black;padding:10px;}
 
-#forecast-box section{background:rosybrown;}
+#current-box{padding:10px;}
+#current-box h2{margin:0;}
+#forecast-box{margin:0;}
+#forecast-box section{background:rgb(38, 36, 81);border-radius: 3px;padding:8px 6px 15px;margin-bottom:5px;border-right:1px solid gainsboro}
+#forecast-box h4{color:white;font-size:1.3rem;}
+#forecast-box img{width:70px;}
+#forecast-box  ul{margin:0;padding:0;}
+#forecast-box li{list-style-type: none;color:white;}
 
-#city-list li{background-color: beige;}
-#city-list li:hover{background-color:aqua;cursor: pointer;}
+footer p{margin:0;}
+
+#sch-form{padding-bottom:20px;border-bottom:1px solid rgb(63, 63, 63);margin-bottom:20px;}
+#sch-form button{margin:5px 0 5px 0;}
+#sch-form input{margin-top:2px;}
+
+
+#city-list{list-style-type: none;}
+#city-list li{text-align:right;margin-bottom:1px;padding-right:10px;}
+#city-list li:hover{background-color:bisque;cursor:pointer;}
+
+#city-list li:hover:after {
+    content: " ➡";
+}
+
+#sch-history a:hover{cursor: pointer;}
+
+#rslt-icon img{width:70px;}
+.forecast h3{font-size:1.5rem}
+

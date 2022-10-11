@@ -8,7 +8,7 @@ var rsltCurDetailEl = document.querySelector('#rslt-cur-detail');
 var forecastBoxEl = document.querySelector('#forecast-box');
 var timeSelectEl = document.querySelector('#time-select');
 var cityListUl = document.querySelector('#city-list');
-var schHistoryUl = document.querySelector('#sch-history');
+var schHistoryDiv = document.querySelector('#sch-history');
 var errMsgEl = document.querySelector('#error-msg');
 
 // The variables to search for
@@ -17,6 +17,7 @@ var geoCode;
 
 var weatherApiKey = '0f82ed7b5ab49854cbcad819084922f8';
 var localStorageKey = 'weatherSchHistory';
+
 
 var formSubmitHandler = function(event){
     event.preventDefault();
@@ -35,7 +36,6 @@ var formSubmitHandler = function(event){
     console.log("**** formsubmitted!!");
     console.log(apiURL);
    
-
 
     fetch(apiURL).then(function(response){
         if (response.ok) {
@@ -140,6 +140,8 @@ var saveDataToStorage = function(){
     localStorage.setItem(localStorageKey,newRecordStr );
 }
 
+// Given cityName, geoData values stored in global variable,
+// 
 var getWeatherInfo = function() {
 
     console.log("GET weather INFO : " + cityName);
@@ -148,11 +150,9 @@ var getWeatherInfo = function() {
     removeAllChildNodes(cityListUl);
     saveDataToStorage();
 
-    // current weather
+    // current weather api
     var apiURL = "https://api.openweathermap.org/data/2.5/weather?lat="+geoCode['lat']+"&lon="+geoCode['lon']+"&units=imperial&appid="+weatherApiKey;
 
-    console.log(apiURL);
-  
     fetch(apiURL).then(function(response){
         if (response.ok) {
             response.json().then(function (data) {
@@ -163,7 +163,6 @@ var getWeatherInfo = function() {
     }).catch( function(error) {
         alert('Unable to connect to OpenWeatherMap.org')
     });
-
 
 }
 
@@ -182,8 +181,6 @@ var displayResult = function(wData) {
     var iconImg = document.createElement('img');
     iconImg.setAttribute('src', "http://openweathermap.org/img/wn/"+wData.weather[0].icon+"@2x.png")
     rsltIconEl.append(iconImg);
-
-    
 
     // rsltCurDetailEl.textContent = printWeatherDetail(wData);
     var detailUl = document.createElement('ul');
@@ -241,7 +238,7 @@ var displayForecast = function(wData){
         if ( thisHour == 14) {
             // console.log(dataList[i].dt_txt + '----'+ thisHour);
 
-            // console.log(moment(moment.unix(dataList[i].dt)).format('YYYY-MM-DD HH:mm:ss'));
+            console.log(moment(moment.unix(dataList[i].dt)).format('YYYY-MM-DD HH:mm:ss'));
 
             var oneBox = document.createElement('section');
             var dateH4 = document.createElement('h4');
@@ -271,11 +268,13 @@ var displayForecast = function(wData){
 
 }
 
+// Get search history from local storage and display & add eventlister for click action
 var displaySearchHistory = function(){
     // display search history
     var historyStr = localStorage.getItem(localStorageKey) ;
     // cleardata
-    removeAllChildNodes(schHistoryUl);
+    removeAllChildNodes(schHistoryDiv);
+    
     if (historyStr) {
         var historyArr = JSON.parse(historyStr) ;
 
@@ -284,11 +283,11 @@ var displaySearchHistory = function(){
             var oldLat = historyArr[i].lat;
             var oldLon = historyArr[i].lon;
 
-        
-            var oldLiEl = document.createElement('li');
+            var oldLiEl = document.createElement('a');
             oldLiEl.setAttribute('data-name', oldCity);
             oldLiEl.setAttribute('data-lat', oldLat);
             oldLiEl.setAttribute('data-lon', oldLon);
+            oldLiEl.setAttribute('class', "list-group-item list-group-item-action");
             oldLiEl.textContent = oldCity;
 
             oldLiEl.addEventListener('click', function(event) {
@@ -300,7 +299,7 @@ var displaySearchHistory = function(){
                 
                 getWeatherInfo();
             });
-            schHistoryUl.append(oldLiEl);
+            schHistoryDiv.append(oldLiEl);
 
         }
 
@@ -308,7 +307,7 @@ var displaySearchHistory = function(){
 }
 
 
-
+// initial display and eventListener
 schFormEl.addEventListener('submit', formSubmitHandler);
 displaySearchHistory();
 

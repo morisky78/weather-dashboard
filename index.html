@@ -12,25 +12,25 @@
     <title>Weather Dashboard - search for a city to show 5-day forecast</title>
   </head>
   <body>
-<header>
-<h1>Weather Dashboard</h1>
+<header class="bg-secondary bg-gradient p-2">
+<h1 class="text-light text-center">Weather Dashboard</h1>
 </header>
 <main class="container-fluid">
     <div class="row">
-        <div class="search-city col-12 col-md-3">
+        <div class="search-city col-12 col-md-3 p-3">
           <form id="sch-form" >
-            <label class="form-label" for="sch-city">Search for a City:</label>
-            <input name="citysearch" id="sch-city" type="text" autofocus="true" class="form-input" />
-            <button type="submit" class="btn">Search</button>
-
+            <h3 class="form-label" for="sch-city">Search for a City:</h3>
+            <input name="citysearch" id="sch-city" type="text" autofocus="true" class="form-control" />
+            <button type="submit" class="btn  btn-primary" >Search</button>
+            <ul id="city-list" class="list-group"></ul>
           </form>
-          <ul id="city-list"></ul>
-          <ul id="sch-history"></ul>
+          
+          <div id="sch-history" class="list-group"></div>
         </div>
 
-        <div class="search-result col-12 col-md-9" >
+        <div class="search-result col-12 col-md-9  p-3 pb-5" >
             <p id="error-msg"></p>
-            <div id="current-box" style="display:none;">
+            <div id="current-box" style="display:none;" class="bg-light bg-gradient shadow-sm rounded mb-2">
                 <h2><em id="rslt-city">City Name</em> <span id="rslt-curdate">(m/d/yyyy)</span></h2>
                 <span id="rslt-icon"></span>
                 <div id="rslt-cur-detail"></div>
@@ -42,8 +42,8 @@
         </div>
       </div>
 </main>
-<footer>
-    <p>Created by Mo Risk</p>
+<footer  class="bg-secondary bg-gradient p-1">
+    <p class="text-light text-center fs-6">Created by Mo Risk</p>
 </footer>
     <script
       type="text/javascript"
