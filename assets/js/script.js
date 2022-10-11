@@ -32,7 +32,7 @@ var formSubmitHandler = function(event){
     }
 
     // TODO: get Geocoding API
-    var apiURL = "http://api.openweathermap.org/geo/1.0/direct?q="+cityName+"&limit=5&appid="+weatherApiKey;
+    var apiURL = "https://api.openweathermap.org/geo/1.0/direct?q="+cityName+"&limit=5&appid="+weatherApiKey;
     console.log("**** formsubmitted!!");
     console.log(apiURL);
    
@@ -172,7 +172,7 @@ var displayResult = function(wData) {
     rsltCurDateEl.textContent = moment(moment.unix(wData.dt)).format('M/D/YYYY');
 
     var iconImg = document.createElement('img');
-    iconImg.setAttribute('src', "http://openweathermap.org/img/wn/"+wData.weather[0].icon+"@2x.png")
+    iconImg.setAttribute('src', "https://openweathermap.org/img/wn/"+wData.weather[0].icon+"@2x.png")
     rsltIconEl.append(iconImg);
 
     var detailUl = document.createElement('ul');
@@ -237,7 +237,7 @@ var displayForecast = function(wData){
 
             oneBox.setAttribute('class', 'col-12 col-md-6 col-lg-2');
             dateH4.textContent = moment(dataList[i].dt_txt, "YYYY-MM-DD HH:mm:ss").format('MM/DD/YYYY');
-            iconIdSpan.setAttribute('src', "http://openweathermap.org/img/wn/"+dataList[i].weather[0].icon+"@2x.png");
+            iconIdSpan.setAttribute('src', "https://openweathermap.org/img/wn/"+dataList[i].weather[0].icon+"@2x.png");
             tempLi.textContent = 'Temp: '+dataList[i].main.temp+"°F";
             windLi.textContent = 'Wind: '+dataList[i].wind.speed+'MPH';
             humidLi.textContent = 'Humidity: '+dataList[i].main.humidity+'%';
