@@ -14,7 +14,7 @@ https://morisky78.github.io/weather-dashboard/
 https://github.com/morisky78/weather-dashboard
 
 ### Multiple Search result
-When the city name searched by the user has multiple results, the city lists are shown as follows, and you can select one of them.
+When the city name searched by the user has multiple results, the city lists are shown as follows, and you can select one of them.  
 <img src="./assets/images/ss-multiple-result.png" height="300" alt="Screenshot of my profile page in large screen size">
 
 ### Responsive user interface
