@@ -235,7 +235,7 @@ var displayForecast = function(wData){
             var humidLi = document.createElement('li');
             var iconIdSpan = document.createElement('img');
 
-            oneBox.setAttribute('class', 'col-12 col-md-6 col-lg-2');
+            oneBox.setAttribute('class', 'col-6 col-md-6 col-lg-2');
             dateH4.textContent = moment(dataList[i].dt_txt, "YYYY-MM-DD HH:mm:ss").format('MM/DD/YYYY');
             iconIdSpan.setAttribute('src', "https://openweathermap.org/img/wn/"+dataList[i].weather[0].icon+"@2x.png");
             tempLi.textContent = 'Temp: '+dataList[i].main.temp+"°F";
