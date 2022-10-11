@@ -15,7 +15,7 @@ var errMsgEl = document.querySelector('#error-msg');
 var cityName;
 var geoCode;
 
-var weatherApiKey = '0f82ed7b5ab49854cbcad819084922f8';
+var weatherApiKey = '75777ffafe0ec050615f15084928c88c';
 var localStorageKey = 'weatherSchHistory';
 
 
@@ -91,8 +91,6 @@ var formSubmitHandler = function(event){
                     } 
                 }
 
-
-
             });
         }
     }).catch( function(error) {
@@ -115,7 +113,6 @@ var saveDataToStorage = function(){
     if (oldRecordStr) {
         schArr = JSON.parse(oldRecordStr) ;
     }
-    
     var oneSchSet = {
         city: cityName,
         lat: geoCode['lat'],
@@ -141,7 +138,6 @@ var saveDataToStorage = function(){
 }
 
 // Given cityName, geoData values stored in global variable,
-// 
 var getWeatherInfo = function() {
 
     console.log("GET weather INFO : " + cityName);
@@ -157,7 +153,6 @@ var getWeatherInfo = function() {
         if (response.ok) {
             response.json().then(function (data) {
                 displayResult(data);
-
             });
         }
     }).catch( function(error) {
@@ -167,11 +162,9 @@ var getWeatherInfo = function() {
 }
 
 var displayResult = function(wData) {
-
     console.log("Display Current Weather: "+cityName);
     console.log(wData);
 
-    
     removeAllChildNodes(rsltIconEl);
     removeAllChildNodes(rsltCurDetailEl);
 
@@ -182,7 +175,6 @@ var displayResult = function(wData) {
     iconImg.setAttribute('src', "http://openweathermap.org/img/wn/"+wData.weather[0].icon+"@2x.png")
     rsltIconEl.append(iconImg);
 
-    // rsltCurDetailEl.textContent = printWeatherDetail(wData);
     var detailUl = document.createElement('ul');
     var tempLi = document.createElement('li');
     var windLi = document.createElement('li');
@@ -196,7 +188,6 @@ var displayResult = function(wData) {
     rsltCurDetailEl.append(detailUl);
 
     currentBoxEl.setAttribute('style', "display:block");
-
 
     // display forecast
     var apiURL = "https://api.openweathermap.org/data/2.5/forecast?lat="+geoCode['lat']+"&lon="+geoCode['lon']+"&units=imperial&appid="+weatherApiKey;
@@ -230,14 +221,10 @@ var displayForecast = function(wData){
 
     for (let i = 0; i < dataList.length; i++) {   
 
-        // var thisHour = moment(dataList[i].dt_txt, "YYYY-MM-DD HH:mm:ss").format('H');
         var thisHour = moment(moment.unix(dataList[i].dt)).format('H');
-        // var thisDT = moment(moment.unix(dataList[i].dt)).format('YYYY-MM-DD HH:mm:ss');
-        // console.log(thisDT);
 
+        // picked one time a day. 2PM
         if ( thisHour == 14) {
-            // console.log(dataList[i].dt_txt + '----'+ thisHour);
-
             console.log(moment(moment.unix(dataList[i].dt)).format('YYYY-MM-DD HH:mm:ss'));
 
             var oneBox = document.createElement('section');
